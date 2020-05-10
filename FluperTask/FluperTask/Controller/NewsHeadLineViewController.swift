@@ -32,11 +32,18 @@ class NewsHeadLineViewController: UIViewController {
     private func initialSetup() {
         self.tableView.register(UINib(nibName: String (describing: NewsHeadlineTableViewCell.self), bundle: Bundle.main), forCellReuseIdentifier: IKCOCellIdentifiers.IKNewsHeadlineTableViewCell)
         
-        self.viewModal.shouldUpdateViewClosure = { [weak self] in
-            DispatchQueue.main.async {
-                self?.activityIndicator.stopAnimating()
-                self?.activityIndicator.isHidden = true
-                self?.tableView.reloadData()
+        self.viewModal.shouldUpdateViewClosure = { [weak self] isSuccess in
+            if isSuccess {
+                DispatchQueue.main.async {
+                    self?.activityIndicator.stopAnimating()
+                    self?.activityIndicator.isHidden = true
+                    self?.tableView.reloadData()
+                }
+            }else {
+                DispatchQueue.main.async {
+                    self?.activityIndicator.stopAnimating()
+                    self?.activityIndicator.isHidden = true
+                }
             }
         }
         self.viewModal.fetchNewsArticle()

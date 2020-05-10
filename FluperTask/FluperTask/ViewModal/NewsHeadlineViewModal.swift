@@ -10,22 +10,23 @@ import Foundation
 
 class NewsHeadlineViewModal {
     
-    var shouldUpdateViewClosure: (() -> Void)?
+    var shouldUpdateViewClosure: ((Bool) -> Void)?
     var newsHeadline: [NewsHeadline]?
     
     func fetchNewsArticle() {
        let newsArticle =  DatabaseHelper.shareInstance.fetchNewsHeadline()
         if newsArticle.count > 0 {
             self.newsHeadline = newsArticle
-            self.shouldUpdateViewClosure?()
+            self.shouldUpdateViewClosure?(true)
         }else {
             WebServices.sharedInstance.getNewsHeadlineList { (isSuccess) in
                 if isSuccess {
                     let newsArticle =  DatabaseHelper.shareInstance.fetchNewsHeadline()
                     self.newsHeadline = newsArticle
-                    self.shouldUpdateViewClosure?()
+                    self.shouldUpdateViewClosure?(isSuccess)
                 }else {
                     // Show Alert
+                    self.shouldUpdateViewClosure?(isSuccess)
                     print("something went wrong please try again")
                 }
             }
